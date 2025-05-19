@@ -63,7 +63,13 @@ spec:
             {{- toYaml .Values.dbchecker.resources | nindent 12 }}
         {{- end }}
         {{- with .Values.extraInitContainers }}
+        {{- if kindIs "string" . }}
         {{- tpl . $ | nindent 8 }}
+        {{- else if kindIs "slice" . }}
+        {{- range . }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+        {{- end }}
         {{- end }}
       {{- end }}
     {{- end }}
@@ -139,11 +145,23 @@ spec:
               value: "true"
             {{- end }}
             {{- with .Values.extraEnv }}
+            {{- if kindIs "string" . }}
             {{- tpl . $ | nindent 12 }}
+            {{- else if kindIs "slice" . }}
+            {{- range . }}
+            {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- end }}
+            {{- end }}
             {{- end }}
           envFrom:
             {{- with .Values.extraEnvFrom }}
+            {{- if kindIs "string" . }}
             {{- tpl . $ | nindent 12 }}
+            {{- else if kindIs "slice" . }}
+            {{- range . }}
+            {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- end }}
+            {{- end }}
             {{- end }}
           ports:
             - name: http
@@ -180,10 +198,22 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             {{- with .Values.extraVolumeMounts }}
+            {{- if kindIs "string" . }}
             {{- tpl . $ | nindent 12 }}
+            {{- else if kindIs "slice" . }}
+            {{- range . }}
+            {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- end }}
+            {{- end }}
             {{- end }}
         {{- with .Values.extraContainers }}
+        {{- if kindIs "string" . }}
         {{- tpl . $ | nindent 8 }}
+        {{- else if kindIs "slice" . }}
+        {{- range . }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+        {{- end }}
         {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -231,5 +261,11 @@ spec:
               {{- end }}
         {{- end }}
         {{- with .Values.extraVolumes }}
+        {{- if kindIs "string" . }}
         {{- tpl . $ | nindent 8 }}
+        {{- else if kindIs "slice" . }}
+        {{- range . }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+        {{- end }}
         {{- end }}
